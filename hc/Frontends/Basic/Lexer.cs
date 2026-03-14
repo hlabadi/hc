@@ -136,9 +136,7 @@ public class BasicLexer
         while (char.IsDigit(Peek()))
             num.Append(Advance());
 
-        var next = Peek();
-
-        if (next == '.')
+        if (Peek() == '.')
         {
             if (!char.IsDigit(PeekNext()))
                 throw new Exception($"Invalid number at {startLine}:{startColumn}");
@@ -149,7 +147,7 @@ public class BasicLexer
                 num.Append(Advance());
         }
 
-        if (next is 'e' or 'E')
+        if (Peek() is 'e' or 'E')
         {
             num.Append(Advance());
             
