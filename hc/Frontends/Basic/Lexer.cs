@@ -211,8 +211,18 @@ public class BasicLexer
 
         var value = sb.ToString();
         
-        if (_keywords.TryGetValue(value, out var keywordType))
+        if (_keywords.TryGetValue(value.ToUpper(), out BasicTokenType keywordType))
+        {
+            if (keywordType == BasicTokenType.Rem)
+            {
+                while (!IsAtEnd() && Peek() != '\n')
+                    Advance();
+        
+                return NextToken();
+            }
+    
             return new BasicToken(keywordType, value, startLine, startColumn);
+        }
         
         return new BasicToken(BasicTokenType.Identifier, value, startLine, startColumn);
     }
@@ -256,6 +266,11 @@ public class BasicLexer
         
             if (c is ' ' or '\t' or '\r')
                 Advance();
+            else if (c == '\'')
+            {
+                while (!IsAtEnd() && Peek() != '\n')
+                    Advance();
+            }
             else
                 break;
         }
